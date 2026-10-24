@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Daily Notebook</title>
+<title>Daily Pages</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Newsreader:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ textarea{font:400 1.05rem/1.6 "Newsreader",serif;resize:vertical}
 </style>
 </head>
 <body>
-<header><button class="burger" id="bg" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button><strong>Daily Notebook</strong></header>
+<header><button class="burger" id="bg" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button><strong>Daily Pages</strong></header>
 <div class="scrim" id="sc"></div>
 <nav class="drawer" id="dr" aria-label="Main menu"><h3>Menu</h3>
 <a href="#/">Home</a><a href="#/upload">Upload post</a><a href="#/streak">Streak</a><a href="#/backup">Backup</a></nav>
@@ -137,10 +137,10 @@ $("#pv").onclick=()=>{cal.setMonth(cal.getMonth()-1);streak()};$("#nx").onclick=
 function backup(){
 main.innerHTML=`<section class="wrap"><h1>Backup</h1><p class="meta">Posts are stored only in this browser. Download a backup file and keep it somewhere safe. Upload it here to add its posts back, on this or another browser.</p><div class="row"><button class="btn" id="dl">Download backup</button><label class="btn ghost" style="margin:0">Upload backup<input type="file" id="up" accept=".json,application/json" hidden></label></div><p id="err" role="alert"></p></section>`;
 $("#dl").onclick=async()=>{if(!posts.length){toast("Nothing to back up yet");return}
-const blob=new Blob([JSON.stringify({app:"daily-notebook",version:1,exported:new Date().toISOString(),posts},null,1)],{type:"application/json"});
+const blob=new Blob([JSON.stringify({app:"daily-pages",version:1,exported:new Date().toISOString(),posts},null,1)],{type:"application/json"});
 const kb=blob.size/1024,sz=blob.size<1024?"less than 1 KB":kb<1024?Math.round(kb)+" KB":(kb/1024).toFixed(1)+" MB";
 if(await ask("Do you want to download "+sz+" ("+posts.length+(posts.length===1?" post":" posts")+") of backup to your device?",[["Yes","y"],["No","n","ghost"]])!=="y")return;
-const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="daily-notebook-backup-"+today()+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast("Backup downloaded")};
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="daily-pages-backup-"+today()+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast("Backup downloaded")};
 $("#up").onchange=async ev=>{const err=$("#err");err.textContent="";const f=ev.target.files[0];if(!f)return;ev.target.value="";let arr;
 try{const j=JSON.parse(await f.text());arr=Array.isArray(j)?j:j.posts;if(!Array.isArray(arr)||!arr.every(x=>x&&x.id&&x.date&&x.body!==undefined&&x.title!==undefined))throw 0}catch(e){err.textContent="That file isn’t a valid backup. Choose a file saved with Download backup.";return}
 const ids=new Set(posts.map(x=>x.id)),add=arr.filter(x=>!ids.has(x.id));
