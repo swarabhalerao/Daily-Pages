@@ -1,6 +1,6 @@
 # Daily Pages
 
-A  personal site to help with maintaining daily write-up during your daily writing commitment: one post a day, with the streak to keep you honest.
+A  personal site to help with maintaining daily write-ups during your daily writing commitment: one post a day, with the streak to keep you honest.
 
 ## What it does
 
