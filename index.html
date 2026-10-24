@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Notebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Newsreader:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+:root{--bg:#F3F5F4;--ink:#1E2A3A;--mut:#5d6b78;--plum:#6A4260;--gold:#E9B23B;--card:#fff;--line:#d5dbd9;--cap:rgba(30,42,58,.16);--t0:#B7D9CF;--t1:#DDD0DA;--t2:#E4E1D8;--drawer:#1E2A3A;--dtx:#F3F5F4;
+color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C27;--ink:#E8ECEA;--mut:#9aa8b4;--plum:#C79BBB;--card:#1c2735;--line:#2d3b4b;--cap:rgba(255,255,255,.09);--t0:#2a4a43;--t1:#45334c;--t2:#363830;--drawer:#0d141d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141C27;--ink:#E8ECEA;--mut:#9aa8b4;--plum:#C79BBB;--card:#1c2735;--line:#2d3b4b;--cap:rgba(255,255,255,.09);--t0:#2a4a43;--t1:#45334c;--t2:#363830;--drawer:#0d141d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Instrument Sans",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;background:var(--bg);border-bottom:1px solid var(--line)}
+header strong{font:600 1.2rem "Newsreader",serif}
+.burger{width:44px;height:44px;border:0;background:none;color:var(--ink);cursor:pointer;border-radius:8px;display:grid;place-content:center;gap:5px}
+.burger i{display:block;width:22px;height:2px;background:currentColor}
+:focus-visible{outline:3px solid var(--plum);outline-offset:2px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(280px,82vw);background:var(--drawer);color:var(--dtx);z-index:21;padding:calc(1.2rem + env(safe-area-inset-top,0px)) 0 1rem;transform:translateX(-100%);transition:transform .22s}
+.open .drawer{transform:none}.open .scrim{display:block}
+.drawer a{display:block;padding:.9rem 1.5rem;color:inherit;text-decoration:none;border-left:4px solid transparent;font-size:1.05rem}
+.drawer a[aria-current]{border-left-color:var(--gold);background:rgba(255,255,255,.07)}
+.drawer h3{margin:0 1.5rem 1rem;font:600 1.4rem "Newsreader",serif}
+main{max-width:1080px;margin:0 auto;padding:1.5rem 1rem 4rem}
+h1{font:300 2.2rem/1.2 "Newsreader",serif;margin:.5rem 0 1.2rem}
+.month{display:grid;grid-template-columns:190px 1fr;gap:1.5rem;margin-bottom:2.5rem}
+.month h2{font:300 1.9rem/1.15 "Newsreader",serif;margin:0;position:sticky;top:calc(4.5rem + env(safe-area-inset-top,0px));align-self:start}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.tile{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;text-decoration:none;color:var(--ink);background:var(--t0);transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.t1{background:var(--t1)}.t2{background:var(--t2)}
+.ex{display:block;padding:1rem 1rem 4rem;font:400 .85rem/1.5 "Newsreader",serif;opacity:.6;height:100%;overflow:hidden}
+.cap{position:absolute;left:0;right:0;bottom:0;background:var(--cap);padding:.7rem .9rem;display:flex;justify-content:space-between;gap:.5rem;align-items:flex-end;backdrop-filter:blur(3px)}
+.cap b{font:600 1.05rem/1.25 "Newsreader",serif;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cap i{font-style:normal;font-size:.8rem;color:var(--mut);white-space:nowrap}
+.wrap{max-width:700px;margin:0 auto}
+label{display:block;font-weight:600;font-size:.9rem;margin-bottom:1rem}
+input[type=date],input:not([type]),textarea{display:block;width:100%;margin-top:.3rem;padding:.65rem .75rem;font:400 1rem "Instrument Sans",sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px}
+textarea{font:400 1.05rem/1.6 "Newsreader",serif;resize:vertical}
+.row{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end}.row .grow{flex:1;min-width:200px}.end{justify-content:flex-end}
+.btn{font:600 .95rem "Instrument Sans",sans-serif;padding:.7rem 1.2rem;border-radius:10px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;display:inline-block;margin:0}
+.btn.ghost{background:none;color:var(--ink)}
+.btn.danger{background:none;color:#b3402f;border-color:#b3402f}
+.link{background:none;border:0;color:var(--plum);font:600 .95rem "Instrument Sans",sans-serif;cursor:pointer;padding:.4rem 0;margin-right:1rem;text-decoration:underline}
+#err{color:#b3402f;min-height:1.5rem;margin:.8rem 0 0}
+.read h1{font:600 2.3rem/1.2 "Newsreader",serif}
+.meta{color:var(--mut);margin:0 0 1.5rem}
+.body{font:400 1.12rem/1.7 "Newsreader",serif;white-space:pre-wrap;overflow-wrap:anywhere;max-width:68ch;margin-bottom:2rem}
+.empty{text-align:center;padding:4rem 1rem}.empty p{font:300 1.5rem "Newsreader",serif}
+.stats{display:flex;gap:2.5rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:.5rem}
+.big{font:300 5.5rem/1 "Newsreader",serif;color:var(--gold)}
+.sm{font:400 2.2rem/1 "Newsreader",serif}.lab{color:var(--mut);font-size:.9rem;display:block;margin-top:.3rem}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:1rem;max-width:460px}
+.cal b{text-align:center;color:var(--mut);font-size:.8rem;font-weight:400}
+.day{aspect-ratio:1;display:grid;place-content:center;border-radius:50%;font-size:.95rem}
+.day.on{background:var(--gold);color:#1E2A3A;font-weight:600}.day.now{outline:2px solid var(--ink);outline-offset:-2px}
+.calhead{display:flex;align-items:center;gap:1rem;margin-top:2rem}.calhead h2{font:400 1.4rem "Newsreader",serif;margin:0;min-width:11rem}
+.calhead button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:1.1rem}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;display:grid;place-items:center;padding:1rem}
+.dlg{background:var(--card);border-radius:14px;padding:1.5rem;max-width:420px;width:100%}.dlg p{font:400 1.2rem/1.4 "Newsreader",serif;margin:0 0 1.3rem}
+#toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.7rem 1.2rem;border-radius:10px;z-index:50;display:none}
+@media (max-width:760px){.month{grid-template-columns:1fr;gap:.8rem}.month h2{position:static}.grid{grid-template-columns:repeat(2,1fr)}.big{font-size:4.5rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><button class="burger" id="bg" aria-label="Open menu" aria-expanded="false"><i></i><i></i><i></i></button><strong>Daily Notebook</strong></header>
+<div class="scrim" id="sc"></div>
+<nav class="drawer" id="dr" aria-label="Main menu"><h3>Menu</h3>
+<a href="#/">Home</a><a href="#/upload">Upload post</a><a href="#/streak">Streak</a><a href="#/backup">Backup</a></nav>
+<main id="main"></main>
+<div id="toast" role="status"></div>
+<script>
+const main=document.getElementById("main"),$=s=>document.querySelector(s);
+let posts=[];
+try{posts=JSON.parse(localStorage.getItem("blog.posts")||"[]")}catch(e){posts=[]}
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const today=()=>ymd(new Date());
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plural=n=>n+(n===1?" day":" days");
+const firstLine=t=>(t.split("\n").find(l=>l.trim())||"").trim().slice(0,80);
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display="none",2600)}
+function save(){try{localStorage.setItem("blog.posts",JSON.stringify(posts))}catch(e){toast("Couldn’t save. Browser storage may be full or blocked.")}}
+function ask(msg,btns){return new Promise(r=>{const o=document.createElement("div");o.className="ov";o.innerHTML='<div class="dlg" role="dialog" aria-modal="true"><p></p><div class="row end"></div></div>';o.querySelector("p").textContent=msg;btns.forEach(([l,v,c])=>{const b=document.createElement("button");b.className="btn "+(c||"");b.textContent=l;b.onclick=()=>{o.remove();r(v)};o.querySelector(".row").append(b)});o.onkeydown=e=>{if(e.key==="Escape"){o.remove();r(null)}};document.body.append(o);o.querySelector("button").focus()})}
+function stats(){const days=[...new Set(posts.map(p=>p.date))].sort(),set=new Set(days);let longest=0,run=0,prev=null;
+for(const d of days){if(prev){const n=parse(prev);n.setDate(n.getDate()+1);run=ymd(n)===d?run+1:1}else run=1;longest=Math.max(longest,run);prev=d}
+const c=parse(today());if(!set.has(ymd(c)))c.setDate(c.getDate()-1);let cur=0;while(set.has(ymd(c))){cur++;c.setDate(c.getDate()-1)}
+return{set,cur,longest,total:days.length,todayDone:set.has(today())}}
+function home(){
+if(!posts.length){main.innerHTML='<div class="empty"><p>No posts yet. Write your first one.</p><a class="btn" href="#/upload">Upload post</a></div>';return}
+const sorted=[...posts].sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created),g={};
+sorted.forEach(p=>(g[p.date.slice(0,7)]=g[p.date.slice(0,7)]||[]).push(p));
+main.innerHTML=Object.keys(g).sort().reverse().map(k=>`<section class="month"><h2>${parse(k+"-01").toLocaleDateString("en",{month:"long",year:"numeric"})}</h2><div class="grid">${g[k].map(p=>`<a class="tile t${parse(p.date).getDate()%3}" href="#/post/${p.id}"><span class="ex">${esc(p.body.slice(0,240))}</span><span class="cap"><b>${esc(p.title)}</b><i>${parse(p.date).getDate()}</i></span></a>`).join("")}</div></section>`).join("")}
+function read(id){const p=posts.find(x=>x.id===id);if(!p){location.hash="#/";return}
+main.innerHTML=`<article class="wrap read"><h1>${esc(p.title)}</h1><p class="meta">${parse(p.date).toLocaleDateString("en",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p><div class="body">${esc(p.body)}</div><button class="link" id="ed">Edit</button><button class="link" id="del">Delete</button></article>`;
+$("#ed").onclick=()=>location.hash="#/upload/"+id;
+$("#del").onclick=async()=>{if(await ask("Delete this post? This can’t be undone.",[["Delete","y","danger"],["Keep it","n","ghost"]])==="y"){posts=posts.filter(x=>x.id!==id);save();toast("Post deleted");location.hash="#/"}}}
+function upload(id){const p=posts.find(x=>x.id===id);
+main.innerHTML=`<section class="wrap"><h1>${p?"Edit post":"Upload post"}</h1><div class="row"><label>Date<input type="date" id="d" max="${today()}"></label><label class="grow">Title<input id="t" placeholder="Defaults to the first line"></label></div><label>Post<textarea id="b" rows="14" placeholder="Paste your post here, or choose a file."></textarea></label><div class="row"><label class="btn ghost" style="margin:0">Choose file (.txt/.docx)<input type="file" id="f" accept=".txt,.docx" hidden></label><button class="btn" id="go">${p?"Save changes":"Upload post"}</button></div><p id="err" role="alert"></p></section>`;
+const d=$("#d"),t=$("#t"),b=$("#b"),err=$("#err");d.value=p?p.date:today();
+let touched=false;
+if(p){t.value=p.title;b.value=p.body;touched=p.title!==firstLine(p.body)}
+t.oninput=()=>{touched=t.value.trim()!==""};
+const sync=()=>{if(!touched)t.value=firstLine(b.value)};b.oninput=sync;
+$("#f").onchange=async e=>{const f=e.target.files[0];if(!f)return;err.textContent="";
+try{let txt;if(/\.docx$/i.test(f.name)){if(!window.mammoth)throw new Error("docx reader didn’t load");txt=(await mammoth.extractRawText({arrayBuffer:await f.arrayBuffer()})).value}else txt=await f.text();
+b.value=txt.trim();sync()}catch(x){err.textContent="Couldn’t read that file: "+x.message+". Paste the text instead."}e.target.value=""};
+$("#go").onclick=async()=>{err.textContent="";const body=b.value.trim();
+if(!d.value||d.value>today()){err.textContent="Choose a date that is today or earlier.";return}
+if(!body){err.textContent="Add some text before uploading.";return}
+const title=t.value.trim()||firstLine(body);
+if(await ask(p?"Save changes to this post?":"Do you want to upload this post?",[["Yes","y"],["No, continue editing","n","ghost"]])!=="y")return;
+let mode="add",same=posts.filter(x=>x.date===d.value&&x.id!==(p&&p.id)).sort((a,b)=>b.created-a.created)[0];
+if(p)mode="edit";
+else if(same){const c=await ask("A post already exists for this date: “"+same.title+"”. What would you like to do?",[["Replace existing","r"],["Add as new post","add","ghost"]]);if(!c)return;mode=c}
+let rid;
+if(mode==="edit"){Object.assign(p,{date:d.value,title,body});rid=p.id}
+else if(mode==="r"){Object.assign(same,{title,body,created:Date.now()});rid=same.id}
+else{rid="p"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);posts.push({id:rid,date:d.value,title,body,created:Date.now()})}
+save();toast(mode==="edit"?"Changes saved":"Post uploaded");location.hash="#/post/"+rid}}
+let cal=new Date();cal.setDate(1);
+function streak(){const s=stats(),y=cal.getFullYear(),m=cal.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate();
+let cells="SMTWTFS".split("").map(c=>`<b>${c}</b>`).join("");for(let i=0;i<first;i++)cells+="<span></span>";
+for(let n=1;n<=dim;n++){const k=y+"-"+pad(m+1)+"-"+pad(n);cells+=`<span class="day${s.set.has(k)?" on":""}${k===today()?" now":""}">${n}</span>`}
+const msg=s.cur===0?"Post today to start a streak.":s.todayDone?"You’ve posted today. Keep it going tomorrow.":"Post today to keep your streak alive.";
+main.innerHTML=`<section class="wrap"><h1>Streak</h1><div class="stats"><div><span class="big">${s.cur}</span><span class="lab">${s.cur===1?"day":"days"} in a row</span></div><div><span class="sm">${plural(s.longest)}</span><span class="lab">Longest streak</span></div><div><span class="sm">${s.total}</span><span class="lab">Days with posts</span></div></div><p class="meta">${msg}</p><div class="calhead"><button id="pv" aria-label="Previous month">‹</button><h2>${cal.toLocaleDateString("en",{month:"long",year:"numeric"})}</h2><button id="nx" aria-label="Next month">›</button></div><div class="cal">${cells}</div></section>`;
+$("#pv").onclick=()=>{cal.setMonth(cal.getMonth()-1);streak()};$("#nx").onclick=()=>{cal.setMonth(cal.getMonth()+1);streak()}}
+function backup(){
+main.innerHTML=`<section class="wrap"><h1>Backup</h1><p class="meta">Posts are stored only in this browser. Download a backup file and keep it somewhere safe. Upload it here to add its posts back, on this or another browser.</p><div class="row"><button class="btn" id="dl">Download backup</button><label class="btn ghost" style="margin:0">Upload backup<input type="file" id="up" accept=".json,application/json" hidden></label></div><p id="err" role="alert"></p></section>`;
+$("#dl").onclick=async()=>{if(!posts.length){toast("Nothing to back up yet");return}
+const blob=new Blob([JSON.stringify({app:"daily-notebook",version:1,exported:new Date().toISOString(),posts},null,1)],{type:"application/json"});
+const kb=blob.size/1024,sz=blob.size<1024?"less than 1 KB":kb<1024?Math.round(kb)+" KB":(kb/1024).toFixed(1)+" MB";
+if(await ask("Do you want to download "+sz+" ("+posts.length+(posts.length===1?" post":" posts")+") of backup to your device?",[["Yes","y"],["No","n","ghost"]])!=="y")return;
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="daily-notebook-backup-"+today()+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast("Backup downloaded")};
+$("#up").onchange=async ev=>{const err=$("#err");err.textContent="";const f=ev.target.files[0];if(!f)return;ev.target.value="";let arr;
+try{const j=JSON.parse(await f.text());arr=Array.isArray(j)?j:j.posts;if(!Array.isArray(arr)||!arr.every(x=>x&&x.id&&x.date&&x.body!==undefined&&x.title!==undefined))throw 0}catch(e){err.textContent="That file isn’t a valid backup. Choose a file saved with Download backup.";return}
+const ids=new Set(posts.map(x=>x.id)),add=arr.filter(x=>!ids.has(x.id));
+if(await ask("Add "+add.length+" posts from this backup? Existing posts stay as they are.",[["Yes","y"],["No","n","ghost"]])!=="y")return;
+posts=posts.concat(add.map(x=>({id:String(x.id),date:String(x.date),title:String(x.title),body:String(x.body),created:Number(x.created)||Date.now()})));save();toast("Restored "+add.length+" posts");location.hash="#/"}}
+function route(){const h=(location.hash||"#/").slice(1).split("/").filter(Boolean),v=h[0]||"home";
+({home,post:()=>read(h[1]),upload:()=>upload(h[1]),streak,backup}[v]||home)();
+document.querySelectorAll(".drawer a").forEach(a=>{const m=a.getAttribute("href")==="#/"?(v==="home"||v==="post"):a.getAttribute("href")==="#/"+(v==="upload"?"upload":v);m?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current")});
+document.body.classList.remove("open");$("#bg").setAttribute("aria-expanded","false");window.scrollTo(0,0)}
+$("#bg").onclick=()=>{const o=document.body.classList.toggle("open");$("#bg").setAttribute("aria-expanded",o)};
+$("#sc").onclick=()=>{document.body.classList.remove("open");$("#bg").setAttribute("aria-expanded","false")};
+addEventListener("hashchange",route);route();
+</script>
+</body>
+</html>
